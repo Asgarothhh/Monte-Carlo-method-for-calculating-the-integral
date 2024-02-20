@@ -10,9 +10,9 @@ double f(double x)
     return x / (1 + pow(x, 2));
 }
 
-double monteCarloIntegralSolver(double xMin, double xMax, double yMin, double yMax, int N)
+double monteCarloIntegralSolver(double xMin, double xMax, double yMin, double yMax, int N, int& inBox)
 {
-    int inBox = 0;
+    inBox = 0;
     for (int i = 0; i < N; i++)
     {
         double rnd1 = (double)rand() / (double)RAND_MAX;
@@ -38,7 +38,9 @@ int main()
     double trapezoidMethod[SIZE] = { 0.458046, 0.45812, 0.458141, 0.458144, 0.458145 };
     double error[SIZE];
     double integralValue[SIZE];
-    double xMin, xMax, yMin=0, yMax;
+    int pointsInBox[SIZE];
+    double xMin, xMax, yMin = 0, yMax;
+    int inBox = 0;
     cout << "\tВычисление значения интеграла методом Монте-Карло";
     cout << "\n\nВведите значение левой границы интегрирования: ";
     cin >> xMin;
@@ -50,17 +52,19 @@ int main()
     for (int i = 0; i < SIZE; i++)
     {
         int n = N[i];
-        integralValue[i] = monteCarloIntegralSolver(xMin, xMax, yMin, yMax, n);
+        integralValue[i] = monteCarloIntegralSolver(xMin, xMax, yMin, yMax, n, inBox);
         error[i] = fabs(integralValue[i] - trapezoidMethod[i]) / trapezoidMethod[i];
+        pointsInBox[i] = inBox;
     }
 
     cout << endl;
 
     for (int i = 0; i < SIZE; i++)
     {
-        cout << "\n" << i+1 << ") Число сгенерированных точек: " << N[i];
+        cout << "\n" << i + 1 << ") Число сгенерированных точек: " << N[i];
         cout << "\nЗначение интеграла: " << integralValue[i];
-        cout << "\nВеличина абсолютной ошибки: " << error[i] << endl;
+        cout << "\nВеличина абсолютной ошибки: " << error[i];
+        cout << "\nЧисло точек, попавших под график функции: " << pointsInBox[i] << endl;
     }
 
     cout << endl;
